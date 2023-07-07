@@ -6,6 +6,7 @@ A simple Python script that scans for open ports on a target host. It utilizes m
 
 - Scans a range of ports on a target host to check for openness
 - Provides a list of open ports with their associated service names
+- Performs Reverse DNS lookup
 - Supports saving the results to a file
 
 ## Requirements
@@ -17,6 +18,7 @@ A simple Python script that scans for open ports on a target host. It utilizes m
   - `concurrent.futures` (for multi-threading)
   - `subprocess` (for executing the ping command)
   - `datetime` (for timestamping)
+  - `dns.reversename`(For DNS lookup)
   
 ## Usage
 
