@@ -3,27 +3,39 @@ import pyfiglet
 import socket
 from datetime import datetime
 import time
+import dns.resolver
+import dns.reversename
 import subprocess
 
 def print_banner():
-    ascii_banner = pyfiglet.figlet_format("PortSCAN  ^_^")
+    # Print the ASCII art banner
+    ascii_banner = pyfiglet.figlet_format("PORT SCANNER")
     print(ascii_banner)
     print()
 
 def ping_host(target):
+    # Ping the target host to check if it is up
     command = ["ping", "-c", "1", "-W", "1", target]
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     return process.returncode == 0
 
 def get_service_name(port):
+    # Get the service name associated with the given port
     try:
         service_name = socket.getservbyport(port)
     except:
         service_name = "Unknown"
     return service_name
 
+def reverse_dns_lookup(ip_address):
+    # Perform reverse DNS lookup to get the domain name associated with the IP address
+    resolver = dns.resolver.Resolver()
+    domain_name = str(resolver.resolve(dns.reversename.from_address(ip_address), "PTR")[0])
+    return domain_name
+
 def scan_port(target, port):
+    # Scan a specific port on the target host
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(1)
     result = sock.connect_ex((target, port))
@@ -64,7 +76,8 @@ def scan_ports(target, start_port, end_port):
                 if open_port:
                     open_ports.append(open_port)
                     service_name = get_service_name(open_port)
-                    print(f"Port {open_port:<6} OPEN {' ' * 5} {service_name}")
+                    domain_name = reverse_dns_lookup(target)
+                    print(f"Port {open_port:<6} OPEN {' ' * 5} {service_name} (Domain: {domain_name})")
             except Exception as e:
                 print(f"Error scanning port: {e}")
 
