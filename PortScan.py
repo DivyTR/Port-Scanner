@@ -9,7 +9,7 @@ import subprocess
 
 def print_banner():
     # Print the ASCII art banner
-    ascii_banner = pyfiglet.figlet_format("PORT SCANNER")
+    ascii_banner = pyfiglet.figlet_format("PortSCAN   ^_^")
     print(ascii_banner)
     print()
 
